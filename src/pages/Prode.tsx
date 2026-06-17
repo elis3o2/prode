@@ -133,50 +133,51 @@ export const Prode = ({ jugador }: Props) => {
     const SCRIPT_URL =
     "https://script.google.com/macros/s/AKfycbyV3D0TdWOu-urr0sn3pQbL8_-E8mZOzxz-IDchglwdM6n1gz5P4t_d_1sNljQnfJC1/exec";
 
-        const guardarPrediccion = async (
-        partidoId: number
-    ) => {
-        const prediccion =
-            predicciones[partidoId];
+const guardarPrediccion = async ( partidoId: number ) => {
+    const prediccion = predicciones[partidoId];
 
-        if (!prediccion) return;
+    if (!prediccion) return;
 
-        const formData = new FormData();
+    // 1. En lugar de FormData, armamos un objeto simple de JavaScript
+    const payload = {
+        jugador: jugador,
+        partido: partidoId,
+        golesLocal: prediccion.golesLocal,
+        golesVisitante: prediccion.golesVisitante
+    };
 
-        formData.append(
-            "jugador",
-            jugador
-        );
-
-        formData.append(
-            "partido",
-            partidoId.toString()
-        );
-
-        formData.append(
-            "golesLocal",
-            prediccion.golesLocal
-        );
-
-        formData.append(
-            "golesVisitante",
-            prediccion.golesVisitante
-        );
-
-        await fetch(
+    try {
+        const respuesta = await fetch(
             SCRIPT_URL,
             {
                 method: "POST",
-                mode: "no-cors",
-                body: formData,
+                // 2. Usamos text/plain para evitar errores CORS de "preflight" en Google
+                headers: {
+                    "Content-Type": "text/plain;charset=utf-8",
+                },
+                // 3. Convertimos el objeto a un string JSON
+                body: JSON.stringify(payload),
+                // 4. Google Apps Script requiere seguir redirecciones internamente
+                redirect: "follow" 
             }
         );
 
-        alert(
-            "Pronóstico enviado"
-        );
-    };
+        // Opcional: verificar si la red no dio error (como un 404 o 500)
+        if (!respuesta.ok) {
+            throw new Error(`Error de red: ${respuesta.status}`);
+        }
 
+        // Si quieres leer la respuesta de tu backend (status: "created" o "updated"):
+        // const resultado = await respuesta.json();
+        // console.log(resultado);
+
+        alert("Pronóstico enviado");
+
+    } catch (error) {
+        console.error("Error enviando el pronóstico:", error);
+        alert("Hubo un problema al enviar el pronóstico. Revisa la consola.");
+    }
+};
 
 
     return (
