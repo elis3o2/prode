@@ -1,8 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/elis3o2/prode/', 
+  base: '/prode/', // <-- ASEGÚRATE DE QUE TENGA LAS DOS BARRAS '/'
 })
