@@ -2,22 +2,21 @@ import { useState } from 'react'
 import { SelectPlayer } from './pages/SelectPlayer'
 import { Prode } from './pages/Prode'
 import './App.css'
+import { Tabla } from './pages/Tabla'
 
 function App() {
-  const [count, setCount] = useState(0)
   const [jugador, setJugador] = useState("")
+  const [mode, setMode] = useState<"player" | "tabla" | "prode">("player")
 
   return (
     <>
-      {jugador?
-      <Prode
-      jugador={jugador}
-      />
-      :
-      <SelectPlayer
-        jugador={jugador}
-        setJugador={setJugador}
-      />}
+      {mode === "prode" ? (
+        <Prode jugador={jugador} setMode={setMode} />
+      ) : mode === "tabla" ? (
+        <Tabla setMode={setMode} />
+      ) : (
+        <SelectPlayer jugador={jugador} setJugador={setJugador} setMode={setMode} />
+      )}
     </>
   )
 }
