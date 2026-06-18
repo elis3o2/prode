@@ -51,7 +51,7 @@ function TeamLogo({ nombre, size = 32 }: { nombre: string; size?: number }) {
     return (
         <Box
             component="img"
-            src={`${nombre.replace(/ /g, "_")}.png`}
+            src={`${nombre.replace(/ /g, "_")}.jpeg`}
             alt={nombre}
             onError={() => setImgError(true)}
             sx={{ width: size, height: size, objectFit: "contain", borderRadius: 1 }}

@@ -137,7 +137,7 @@ function calcPuntos(
 
 function TeamLogo({ nombre, size = 52 }: { nombre: string; size?: number }) {
     const [imgError, setImgError] = useState(false);
-    const src = `${nombre.replace(/ /g, "_")}.png`;
+    const src = `${nombre.replace(/ /g, "_")}.jpeg`;
 
     if (imgError) {
         return (
@@ -351,9 +351,10 @@ function PartidoCard({
     onGuardar: (id: number) => Promise<void>;
 }) {
     const [saveState, setSaveState] = useState<SaveState>("idle");
-    const finalizado =
-        partido.resultadoLocal !== null &&
-        partido.resultadoVisitante !== null;
+    const ahora = new Date();
+    const fechaPartido = new Date(`${partido.fechaRaw}T${partido.horaRaw}`);
+    const finalizado = ahora > fechaPartido || 
+        (partido.resultadoLocal !== null && partido.resultadoVisitante !== null);
     const puntos = finalizado ? calcPuntos(partido, prediccion) : null;
 
     const handleGuardar = async () => {
